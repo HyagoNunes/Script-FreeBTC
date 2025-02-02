@@ -3,6 +3,7 @@
 // @namespace    https://github.com/HaygoNunes/Script-FreeBTC
 // @version      2.0
 // @description  Script para automatizar ações no FreeBitco.in, incluindo interação com CAPTCHA e clique automático no "Claim".
+// @description  https://freebitco.in/?r=966336
 // @author       Hyago Nunes
 // @match        https://freebitco.in/*
 // @grant        none
