@@ -24,8 +24,8 @@
 
     // Função para interagir com o hCaptcha
     function interagirComHCaptcha() {
-        const HC_CHECK_BOX = "#checkbox"; // Seletor da caixa do hCaptcha
-        const HC_ARIA_CHECKED = "aria-checked"; // Atributo que indica o status do hCaptcha
+        const HC_CHECK_BOX = "#checkbox"; 
+        const HC_ARIA_CHECKED = "aria-checked"; 
 
         const caixaHCaptcha = selecionarElemento(HC_CHECK_BOX);
 
@@ -46,9 +46,9 @@
 
     // Função para interagir com o reCAPTCHA
     function interagirComReCaptcha() {
-        const CHECK_BOX = ".recaptcha-checkbox-border"; // Seletor da caixa do reCAPTCHA
-        const RECAPTCHA_STATUS = "#recaptcha-accessible-status"; // Seletor do status do reCAPTCHA
-        const DOSCAPTCHA = ".rc-doscaptcha-body"; // Seletor para mensagem de queries automatizadas
+        const CHECK_BOX = ".recaptcha-checkbox-border"; 
+        const RECAPTCHA_STATUS = "#recaptcha-accessible-status"; 
+        const DOSCAPTCHA = ".rc-doscaptcha-body"; 
 
         const caixaReCaptcha = selecionarElemento(CHECK_BOX);
         const statusReCaptcha = selecionarElemento(RECAPTCHA_STATUS);
@@ -77,9 +77,9 @@
 
     // Função para clicar no botão "Claim" se o CAPTCHA estiver resolvido
     function verificarEClicarClaim() {
-        const botaoClaim = selecionarElemento('#claim'); // Seletor do botão "Claim"
-        const hCaptchaResolvido = selecionarElemento("#checkbox[aria-checked='true']"); // Verifica se o hCaptcha está resolvido
-        const reCaptchaResolvido = selecionarElemento(".recaptcha-checkbox[aria-checked='true']"); // Verifica se o reCAPTCHA está resolvido
+        const botaoClaim = selecionarElemento('#claim'); 
+        const hCaptchaResolvido = selecionarElemento("#checkbox[aria-checked='true']"); 
+        const reCaptchaResolvido = selecionarElemento(".recaptcha-checkbox[aria-checked='true']"); 
 
         if (elementoEstaVisivel(botaoClaim) && (hCaptchaResolvido || reCaptchaResolvido)) {
             botaoClaim.click();
@@ -122,33 +122,33 @@
             if (verificarEClicarClaim()) {
                 clearInterval(intervaloVerificacaoClaim);
             }
-        }, 2000); // Verifica a cada 2 segundos
+        }, 2000); 
 
-        // Tenta interagir com o hCaptcha a cada 3 segundos
+        
         const intervaloHCaptcha = setInterval(() => {
             if (interagirComHCaptcha()) {
                 clearInterval(intervaloHCaptcha);
             }
         }, 3000);
 
-        // Tenta interagir com o reCAPTCHA a cada 3 segundos
+        
         const intervaloReCaptcha = setInterval(() => {
             if (interagirComReCaptcha()) {
                 clearInterval(intervaloReCaptcha);
             }
         }, 3000);
 
-        // Aguarda 7 segundos antes de tentar clicar em "PLAY WITHOUT CAPTCHA"
+        
         setTimeout(() => {
             clicarPlaySemCaptcha();
         }, 7000);
 
-        // Aguarda 10 segundos antes de tentar clicar em "ROLL"
+        
         setTimeout(() => {
             clicarRoll();
         }, 10000);
 
-        // Aguarda 15 segundos antes de tentar clicar em "ROLL" novamente
+        
         setTimeout(() => {
             clicarRoll();
         }, 15000);
