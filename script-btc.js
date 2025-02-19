@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Void Coin FreeBitco 
+// @name         Void Coin FreeBitco
 // @namespace    https://github.com/HaygoNunes/Script-FreeBTC
 // @version      2.0
 // @description  https://freebitco.in/?r=1393623
@@ -24,15 +24,15 @@
     function isHidden(el) { return (el.offsetParent === null); }
     function random(min, max) { return min + (max - min) * Math.random(); }
 
-    // CONFIGURAÇÃO 
+    // CONFIGURAÇÃO
     const CONFIG = {
         tentativasMaximas: 7,
-        intervaloCaptcha: 3000,            
-        rollDelay: 7000,                   
-        playWithoutCaptchaDelay: 12000,     
-        secondRollDelay: 14000,            
-        intervaloVerificacao: 1000,         
-        intervaloBackground: 30000,         
+        intervaloCaptcha: 3000,
+        rollDelay: 7000,
+        playWithoutCaptchaDelay: 12000,
+        secondRollDelay: 14000,
+        intervaloVerificacao: 1000,
+        intervaloBackground: 30000,
         // Seletores para captchas e botões
         hcCheckBox: "#checkbox",
         hcAriaChecked: "aria-checked",
@@ -49,7 +49,7 @@
         // 2Captcha (para resolver o Turnstile, se necessário)
         use2Captcha: true,
         turnstileSitekey: "a1bva",
-        apiKey2Captcha: "e6e564ccebe70607715fa0e7a2188482"
+        apiKey2Captcha: "Sua api_key do 2Capcha"
     };
 
     // ESTADO – persistência simples
@@ -190,7 +190,7 @@
         }, 5000);
     }
 
-    // FUNÇÃO PARA SIMULAR CLIQUE HUMANO 
+    // FUNÇÃO PARA SIMULAR CLIQUE HUMANO
     function simularCliqueHumano(elemento) {
         if (!elemento) return false;
         let sucesso = false;
@@ -259,7 +259,7 @@
         setTimeout(acionarRoll, CONFIG.secondRollDelay);
     }
 
-    // MONITORAMENTO DO TIMER 
+    // MONITORAMENTO DO TIMER
     function monitorarTimer() {
         setInterval(() => {
             const timer = qSelector(CONFIG.timerElement);
@@ -306,7 +306,7 @@
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 console.log("Retomando operação em primeiro plano");
-                
+
             } else {
                 console.log("Modo segundo plano ativado");
             }
