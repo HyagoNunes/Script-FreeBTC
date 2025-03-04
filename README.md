@@ -1,4 +1,4 @@
-# Void Coin Freebitco / Script FreeBTC
+# Void Coin Freebitco [Freebitco.in](https://freebitco.in/?r=1393623)
 
 Este projeto é um script desenvolvido para automatizar tarefas no site FreeBitco.in, facilitando a experiência do usuário e otimizando o aproveitamento dos recursos disponíveis. Ele foi elaborado para ser simples o suficiente para usuários iniciantes, mas também flexível e personalizável para aqueles com conhecimentos mais avançados.
 
