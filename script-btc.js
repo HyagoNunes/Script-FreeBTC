@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Void Coin FreeBitco
 // @namespace    https://github.com/HaygoNunes/Script-FreeBTC
+// @namespace    https://greasyfork.org/en/users/1295753-hyago-nunes
 // @version      2.0
 // @description  https://freebitco.in/?r=1393623
 // @author       Sr.Fox / Hyago Nunes
@@ -13,6 +14,7 @@
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
+// @update      https://update.greasyfork.org/scripts/493924/Void%20Coin%20FreeBitco.user.js
 // @license      MIT
 // ==/UserScript==
 
@@ -49,7 +51,7 @@
         // 2Captcha (para resolver o Turnstile, se necessário)
         use2Captcha: true,
         turnstileSitekey: "a1bva",
-        apiKey2Captcha: "Sua api_key do 2Capcha"
+        apiKey2Captcha: "Sua KEY_API do 2captcha"
     };
 
     // ESTADO – persistência simples
