@@ -28,7 +28,7 @@ O script opera monitorando constantemente o estado da página e interagindo com 
 - **Conexão à Internet:** Necessária para que o script interaja com o site.
 
 ## Instalação
-
+ Primeiro crie sua conta no [Freebitco.in](https://freebitco.in/?r=1393623)
 ### Via GreasyFork
 
 1. Acesse o script na página do GreasyFork:  
