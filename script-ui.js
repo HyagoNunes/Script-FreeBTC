@@ -3,6 +3,9 @@
     'use strict';
 
     const UI = {
+        config: null,
+        state: null,
+
         styles: `
             .btc-control-panel {
                 position: fixed;
@@ -98,15 +101,26 @@
                 const modoAtual = localStorage.getItem('btcMode') || 'normal';
                 const novoModo = modoAtual === 'normal' ? 'semCaptcha' : 'normal';
                 localStorage.setItem('btcMode', novoModo);
+                window.dispatchEvent(new CustomEvent('btcModeChange', {
+                    detail: { modo: novoModo }
+                }));
                 this.atualizarInterface();
             };
 
             document.getElementById('btc-clear-stats').onclick = () => {
                 if (confirm('Limpar todas as estatísticas?')) {
                     localStorage.removeItem('btcStats');
+                    window.dispatchEvent(new CustomEvent('btcClearStats'));
                     this.atualizarInterface();
                 }
             };
+
+            // Escutar eventos do script principal
+            window.addEventListener('btcScriptStart', (e) => {
+                this.config = e.detail.config;
+                this.state = e.detail.state;
+                this.atualizarInterface();
+            });
         },
 
         atualizarInterface() {

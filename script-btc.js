@@ -16,6 +16,7 @@
 // @grant        GM_xmlhttpRequest
 // @update      https://update.greasyfork.org/scripts/493924/Void%20Coin%20FreeBitco.user.js
 // @license      MIT
+// @require     https://raw.githubusercontent.com/HyagoNunes/Script-FreeBTC/main/script-ui.js
 // ==/UserScript==
 
 (function () {
@@ -377,8 +378,28 @@
         configurarVisibilidade();
         gerenciarCaptcha();
         iniciarAcoesTemporizadas();
+
+        // Emitir evento para UI
+        window.dispatchEvent(new CustomEvent('btcScriptStart', {
+            detail: {
+                config: CONFIG,
+                state: state
+            }
+        }));
+        
         console.log("Script iniciado no Freebitco.in");
     }
+
+    // Adicionar listeners para comunicação com UI
+    window.addEventListener('btcModeChange', (e) => {
+        state.modoOperacao = e.detail.modo === 'semCaptcha' ? 1 : 0;
+        salvarEstado();
+    });
+
+    window.addEventListener('btcClearStats', () => {
+        state.tentativas = 0;
+        salvarEstado();
+    });
 
     window.addEventListener('load', () => {
         ajustarPreloadCloudflare();
