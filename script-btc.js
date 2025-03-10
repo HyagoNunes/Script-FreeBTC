@@ -51,7 +51,7 @@
         // 2Captcha (para resolver o Turnstile, se necessário)
         use2Captcha: true,
         turnstileSitekey: "a1bva",
-        apiKey2Captcha: "e6e564ccebe70607715fa0e7a2188482"
+        apiKey2Captcha: "Sua KEY_API do 2captcha"
     };
 
     // ESTADO – persistência simples
@@ -61,24 +61,15 @@
         ultimaExecucao: 0
     };
 
-    // Modificar o gerenciamento de estado
     function carregarEstado() {
         try {
-            const saved = localStorage.getItem('btcStats');
-            if (saved) {
-                const stats = JSON.parse(saved);
-                state.tentativas = stats.totalRolls || 0;
-                state.modoOperacao = localStorage.getItem('btcMode') === 'semCaptcha' ? 1 : 0;
-            }
+            const saved = GM_getValue('stateFreeBTC');
+            if (saved) state = Object.assign(state, JSON.parse(saved));
         } catch (e) { console.error(e); }
     }
-
     function salvarEstado() {
         try {
-            localStorage.setItem('btcStats', JSON.stringify({
-                totalRolls: state.tentativas,
-                lastUpdate: new Date().toISOString()
-            }));
+            GM_setValue('stateFreeBTC', JSON.stringify(state));
         } catch (e) { console.error(e); }
     }
 
@@ -377,7 +368,7 @@
         alert(`Modo: ${state.modoOperacao === 0 ? 'Normal' : 'Sem Captcha'}\nTentativas: ${state.tentativas}`);
     });
 
-    // Modificar a função init
+    // INICIALIZAÇÃO
     function init() {
         carregarEstado();
         PopupManager.fecharPopups();
@@ -386,12 +377,6 @@
         configurarVisibilidade();
         gerenciarCaptcha();
         iniciarAcoesTemporizadas();
-        
-        // Carregar UI
-        const script = document.createElement('script');
-        script.src = 'script-ui.js';
-        document.head.appendChild(script);
-        
         console.log("Script iniciado no Freebitco.in");
     }
 
