@@ -67,6 +67,7 @@
                         <div>Próximo Roll: <span id="btc-next-roll">--:--</span></div>
                         <div>Total Rolls: <span id="btc-total-rolls">0</span></div>
                         <div>Modo: <span id="btc-mode">Normal</span></div>
+                        <div>Saldo BTC: <span id="btc-balance">0.00000000</span></div>
                     </div>
                     <div class="btc-config">
                         <button class="btc-button" id="btc-toggle-mode">Alternar Modo</button>
@@ -89,6 +90,12 @@
 
             // Eventos
             this.configurarEventos();
+
+            // Adicionar interval para atualização do timer e saldo
+            setInterval(() => {
+                this.atualizarTimer();
+                this.atualizarSaldoBTC();
+            }, 1000);
         },
 
         configurarEventos() {
@@ -129,6 +136,26 @@
 
             document.getElementById('btc-total-rolls').textContent = stats.totalRolls;
             document.getElementById('btc-mode').textContent = modo === 'normal' ? 'Normal' : 'Sem Captcha';
+        },
+
+        atualizarTimer() {
+            const timer = document.querySelector('#time_remaining');
+            if (timer) {
+                const sections = timer.querySelectorAll('.countdown_section');
+                if (sections.length >= 2) {
+                    const minutes = sections[0].querySelector('.countdown_amount').textContent.padStart(2, '0');
+                    const seconds = sections[1].querySelector('.countdown_amount').textContent.padStart(2, '0');
+                    document.getElementById('btc-next-roll').textContent = `${minutes}:${seconds}`;
+                }
+            }
+        },
+
+        atualizarSaldoBTC() {
+            const balanceElement = document.evaluate('/html/body/div[1]/div/nav/section/ul/li[20]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (balanceElement) {
+                const balance = balanceElement.textContent.trim();
+                document.getElementById('btc-balance').textContent = balance;
+            }
         }
     };
 
