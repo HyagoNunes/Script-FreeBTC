@@ -1,0 +1,127 @@
+// Interface do usuário para o Script FreeBTC
+(function() {
+    'use strict';
+
+    const UI = {
+        styles: `
+            .btc-control-panel {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: #2c3e50;
+                color: #ecf0f1;
+                padding: 15px;
+                border-radius: 8px;
+                z-index: 9999;
+                width: 300px;
+                font-family: Arial, sans-serif;
+            }
+            .btc-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            .btc-minimize {
+                cursor: pointer;
+                padding: 2px 6px;
+                background: #34495e;
+                border-radius: 4px;
+            }
+            .btc-content {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btc-stats {
+                background: #34495e;
+                padding: 10px;
+                border-radius: 4px;
+            }
+            .btc-config {
+                display: grid;
+                gap: 5px;
+            }
+            .btc-button {
+                background: #3498db;
+                border: none;
+                padding: 5px 10px;
+                color: white;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        `,
+
+        criarPainel() {
+            const div = document.createElement('div');
+            div.className = 'btc-control-panel';
+            div.innerHTML = `
+                <div class="btc-header">
+                    <span>FreeBTC Control</span>
+                    <span class="btc-minimize">_</span>
+                </div>
+                <div class="btc-content">
+                    <div class="btc-stats">
+                        <div>Próximo Roll: <span id="btc-next-roll">--:--</span></div>
+                        <div>Total Rolls: <span id="btc-total-rolls">0</span></div>
+                        <div>Modo: <span id="btc-mode">Normal</span></div>
+                    </div>
+                    <div class="btc-config">
+                        <button class="btc-button" id="btc-toggle-mode">Alternar Modo</button>
+                        <button class="btc-button" id="btc-clear-stats">Limpar Estatísticas</button>
+                    </div>
+                </div>
+            `;
+            return div;
+        },
+
+        inicializar() {
+            // Adicionar estilos
+            const style = document.createElement('style');
+            style.textContent = this.styles;
+            document.head.appendChild(style);
+
+            // Adicionar painel
+            const painel = this.criarPainel();
+            document.body.appendChild(painel);
+
+            // Eventos
+            this.configurarEventos();
+        },
+
+        configurarEventos() {
+            document.querySelector('.btc-minimize').onclick = () => {
+                const content = document.querySelector('.btc-content');
+                content.style.display = content.style.display === 'none' ? 'flex' : 'none';
+            };
+
+            document.getElementById('btc-toggle-mode').onclick = () => {
+                const modoAtual = localStorage.getItem('btcMode') || 'normal';
+                const novoModo = modoAtual === 'normal' ? 'semCaptcha' : 'normal';
+                localStorage.setItem('btcMode', novoModo);
+                this.atualizarInterface();
+            };
+
+            document.getElementById('btc-clear-stats').onclick = () => {
+                if (confirm('Limpar todas as estatísticas?')) {
+                    localStorage.removeItem('btcStats');
+                    this.atualizarInterface();
+                }
+            };
+        },
+
+        atualizarInterface() {
+            const stats = JSON.parse(localStorage.getItem('btcStats') || '{"totalRolls":0}');
+            const modo = localStorage.getItem('btcMode') || 'normal';
+
+            document.getElementById('btc-total-rolls').textContent = stats.totalRolls;
+            document.getElementById('btc-mode').textContent = modo === 'normal' ? 'Normal' : 'Sem Captcha';
+        }
+    };
+
+    // Inicializar UI quando o DOM estiver pronto
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => UI.inicializar());
+    } else {
+        UI.inicializar();
+    }
+})();
