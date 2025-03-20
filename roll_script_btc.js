@@ -16,7 +16,6 @@
 // @grant        GM_xmlhttpRequest
 // @update      https://update.greasyfork.org/scripts/493924/Void%20Coin%20FreeBitco.user.js
 // @license      MIT
-// @require     https://raw.githubusercontent.com/HyagoNunes/Script-FreeBTC/main/script-ui.js
 // ==/UserScript==
 
 (function () {
@@ -52,7 +51,7 @@
         // 2Captcha (para resolver o Turnstile, se necessário)
         use2Captcha: true,
         turnstileSitekey: "a1bva",
-        apiKey2Captcha: "Sua KEY_API do 2captcha"
+        apiKey2Captcha: "e6e564ccebe70607715fa0e7a2188482"
     };
 
     // ESTADO – persistência simples
@@ -378,28 +377,8 @@
         configurarVisibilidade();
         gerenciarCaptcha();
         iniciarAcoesTemporizadas();
-
-        // Emitir evento para UI
-        window.dispatchEvent(new CustomEvent('btcScriptStart', {
-            detail: {
-                config: CONFIG,
-                state: state
-            }
-        }));
-        
         console.log("Script iniciado no Freebitco.in");
     }
-
-    // Adicionar listeners para comunicação com UI
-    window.addEventListener('btcModeChange', (e) => {
-        state.modoOperacao = e.detail.modo === 'semCaptcha' ? 1 : 0;
-        salvarEstado();
-    });
-
-    window.addEventListener('btcClearStats', () => {
-        state.tentativas = 0;
-        salvarEstado();
-    });
 
     window.addEventListener('load', () => {
         ajustarPreloadCloudflare();
