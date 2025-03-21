@@ -384,4 +384,6 @@
         ajustarPreloadCloudflare();
         init();
     });
+    // Expor a função init para uso externo
+    window.rollInit = init;
 })();
