@@ -363,6 +363,11 @@
         window.GM_setValue = (key, value) => localStorage.setItem(key, JSON.stringify(value));
     }
 
+    // Adicionar polyfill para GM_registerMenuCommand se não estiver definido
+    if (typeof GM_registerMenuCommand === 'undefined') {
+        window.GM_registerMenuCommand = function() {};
+    }
+
     // MENU DE CONTROLE
     GM_registerMenuCommand('Configurações do Script', () => {
         alert(`Modo: ${state.modoOperacao === 0 ? 'Normal' : 'Sem Captcha'}\nTentativas: ${state.tentativas}`);
