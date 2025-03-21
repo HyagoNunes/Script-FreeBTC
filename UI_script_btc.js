@@ -31,13 +31,20 @@
 
     // Substitui a div alvo (identificada pelo XPath) pela nossa interface
     function replaceTargetDiv() {
-        const xpath = "/html/body/div[2]/div/div/div[3]";
-        const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-        const target = result.singleNodeValue;
-        if (target && target.parentNode) {
-            const ui = createUI();
-            target.parentNode.replaceChild(ui, target);
-        }
+        // Tenta localizar o elemento alvo a cada 1 segundo, até ser encontrado.
+        const interval = setInterval(() => {
+            const xpath = "/html/body/div[2]/div/div/div[3]";
+            const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const target = result.singleNodeValue;
+            if (target && target.parentNode) {
+                const ui = createUI();
+                target.parentNode.replaceChild(ui, target);
+                clearInterval(interval);
+                console.log("UI injetada com sucesso na div alvo.");
+            } else {
+                console.log("Aguardando o elemento alvo...");
+            }
+        }, 1000);
     }
 
     // Função para monitorar o timer e atualizar a interface e o console
