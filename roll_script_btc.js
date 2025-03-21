@@ -1,16 +1,3 @@
-
-(function() {
-    'use strict';
-    var script = document.createElement('script');
-    script.src = "https://raw.githubusercontent.com/HyagoNunes/Script-FreeBTC/main/UI_script_btc.js";
-    script.onload = function() {
-        if (typeof initUI === 'function') {
-            initUI();
-        }
-    };
-    document.head.appendChild(script);
-})();
-
 // ==UserScript==
 // @name         auto-freeBTC || Void-Hub
 // @namespace    https://github.com/HaygoNunes/Script-FreeBTC
@@ -30,6 +17,24 @@
 // @update      https://update.greasyfork.org/scripts/493924/Void%20Coin%20FreeBitco.user.js
 // @license      MIT
 // ==/UserScript==
+
+// Bloco para importar e carregar a UI dentro da div alvo (/html/body/div[2]/div/div/div[3])
+(function() {
+    'use strict';
+    var uiScript = document.createElement('script');
+    // Usamos o raw do GitHub para carregar a UI
+    uiScript.src = "https://raw.githubusercontent.com/HyagoNunes/Script-FreeBTC/main/UI_script_btc.js";
+    uiScript.async = false; // Garante a execução na ordem
+    uiScript.onload = function() {
+        console.log("UI_script_btc.js carregado com sucesso.");
+        if (typeof initUI === 'function') {
+            initUI(); // initUI() substitui a div alvo pela interface
+        } else {
+            console.error("Função initUI não definida.");
+        }
+    };
+    document.body.appendChild(uiScript);
+})();
 
 (function () {
     'use strict';
@@ -286,6 +291,48 @@
         }, 1000);
     }
 
+    // MONITORAMENTO VISUAL DO TIMER NO CONSOLE (formata com countdown_section se disponível)
+    function monitorarTimerNoConsole() {
+        let ultimoTempo = '';
+        const formatarTempo = (elemento) => {
+            const secoes = elemento.querySelectorAll('.countdown_section');
+            if (secoes.length < 2) return null;
+            const minutos = secoes[0].querySelector('.countdown_amount').textContent.padStart(2, '0');
+            const segundos = secoes[1].querySelector('.countdown_amount').textContent.padStart(2, '0');
+            return `${minutos}:${segundos}`;
+        };
+        const atualizarConsole = () => {
+            const timer = qSelector(CONFIG.timerElement);
+            if (timer && timer.offsetParent !== null) {
+                const tempoFormatado = formatarTempo(timer);
+                if (tempoFormatado && tempoFormatado !== ultimoTempo) {
+                    console.clear();
+                    console.log(`⏳ Timer: ${tempoFormatado}`);
+                    ultimoTempo = tempoFormatado;
+                }
+            } else {
+                if (ultimoTempo !== 'oculto') {
+                    console.log(' Timer não visível');
+                    ultimoTempo = 'oculto';
+                }
+            }
+        };
+        setInterval(atualizarConsole, 1000);
+        atualizarConsole();
+    }
+
+    // CONTROLE DE VISIBILIDADE
+    function configurarVisibilidade() {
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                console.log("Retomando operação em primeiro plano");
+
+            } else {
+                console.log("Modo segundo plano ativado");
+            }
+        });
+    }
+
     // AJUSTE DO PRELOAD DO CLOUDFLARE
     function ajustarPreloadCloudflare() {
         try {
@@ -357,6 +404,7 @@
         ajustarPreloadCloudflare();
         init();
     });
-    // Expor a função init para uso externo
+    // Expor a função init para uso externo (caso seja chamada pela UI)
     window.rollInit = init;
+
 })();

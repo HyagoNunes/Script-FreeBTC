@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    // Função para carregar dinamicamente o roll_script_btc.js do GitHub
+    // Função para carregar dinamicamente o roll_script (caso necessário, mas neste projeto o roll_script é o userscript principal)
     function loadRollScript(callback) {
         var script = document.createElement('script');
         script.src = "https://raw.githubusercontent.com/HyagoNunes/Script-FreeBTC/main/roll_script_btc.js";
@@ -9,7 +9,7 @@
         document.head.appendChild(script);
     }
 
-    // Atualiza a criação da interface para incluir a exibição do timer
+    // Cria a interface gráfica que será inserida na div alvo (/html/body/div[2]/div/div/div[3])
     function createUI() {
         const container = document.createElement('div');
         container.id = 'custom-ui';
@@ -29,7 +29,18 @@
         return container;
     }
 
-    // Função para monitorar o timer e atualizar o console e a interface
+    // Substitui a div alvo (identificada pelo XPath) pela nossa interface
+    function replaceTargetDiv() {
+        const xpath = "/html/body/div[2]/div/div/div[3]";
+        const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        const target = result.singleNodeValue;
+        if (target && target.parentNode) {
+            const ui = createUI();
+            target.parentNode.replaceChild(ui, target);
+        }
+    }
+
+    // Função para monitorar o timer e atualizar a interface e o console
     function monitorarTimerUI() {
         let ultimoTempo = '';
         function formatarTempo(timer) {
@@ -63,7 +74,7 @@
         atualizarUI();
     }
 
-    // Função para registrar mudança de visibilidade e exibir status no console
+    // Função para registrar a mudança de visibilidade
     function configurarVisibilidade() {
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
@@ -74,30 +85,14 @@
         });
     }
 
-    // Substitui a div alvo (localizada via XPath) pela nossa interface
-    function replaceTargetDiv() {
-        const xpath = "/html/body/div[2]/div/div/div[3]";
-        const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-        const target = result.singleNodeValue;
-        if (target && target.parentNode) {
-            const ui = createUI();
-            target.parentNode.replaceChild(ui, target);
-        }
-    }
-
-    // Modificar a inicialização para chamar a atualização do timer e registrar a visibilidade
+    // Função de inicialização da UI: substitui a div alvo, inicia o monitoramento e registra visibilidade
     function initUI() {
         replaceTargetDiv();
-        loadRollScript(function() {
-            console.log("Roll script carregado.");
-        });
         monitorarTimerUI();
         configurarVisibilidade();
+        console.log("Interface de usuário (UI) inicializada.");
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initUI);
-    } else {
-        initUI();
-    }
+    // Exporta a função para uso externo
+    window.initUI = initUI;
 })();
