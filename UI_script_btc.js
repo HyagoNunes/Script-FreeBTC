@@ -9,7 +9,7 @@
         document.head.appendChild(script);
     }
 
-    // Cria a interface gráfica que substituirá a div alvo
+    // Atualiza a criação da interface para incluir a exibição do timer
     function createUI() {
         const container = document.createElement('div');
         container.id = 'custom-ui';
@@ -17,9 +17,9 @@
         container.innerHTML = `
             <h2>Interface de Controle FreeBTC</h2>
             <div id="ui-info">Aguardando informações...</div>
+            <div id="ui-timer">Timer: --:--</div>
             <button id="ui-action">Executar Ação Roll</button>
         `;
-        // Exemplo: acionar função do roll quando o botão for clicado
         container.querySelector('#ui-action').addEventListener('click', function(){
             if (window.rollInit) {
                 window.rollInit();
@@ -27,6 +27,51 @@
             }
         });
         return container;
+    }
+
+    // Função para monitorar o timer e atualizar o console e a interface
+    function monitorarTimerUI() {
+        let ultimoTempo = '';
+        function formatarTempo(timer) {
+            const secoes = timer.querySelectorAll('.countdown_section');
+            if (secoes.length < 2) return null;
+            const minutos = secoes[0].querySelector('.countdown_amount').textContent.padStart(2, '0');
+            const segundos = secoes[1].querySelector('.countdown_amount').textContent.padStart(2, '0');
+            return `${minutos}:${segundos}`;
+        }
+        function atualizarUI() {
+            const timer = document.querySelector('#time_remaining');
+            if (timer && timer.offsetParent !== null) {
+                const tempo = formatarTempo(timer);
+                if (tempo && tempo !== ultimoTempo) {
+                    console.clear();
+                    console.log(`⏳ Timer: ${tempo}`);
+                    const uiTimer = document.getElementById('ui-timer');
+                    if (uiTimer) {
+                        uiTimer.textContent = `Timer: ${tempo}`;
+                    }
+                    ultimoTempo = tempo;
+                }
+            } else {
+                const uiTimer = document.getElementById('ui-timer');
+                if (uiTimer) {
+                    uiTimer.textContent = `Timer: --:--`;
+                }
+            }
+        }
+        setInterval(atualizarUI, 1000);
+        atualizarUI();
+    }
+
+    // Função para registrar mudança de visibilidade e exibir status no console
+    function configurarVisibilidade() {
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                console.log("Retomando operação em primeiro plano");
+            } else {
+                console.log("Modo segundo plano ativado");
+            }
+        });
     }
 
     // Substitui a div alvo (localizada via XPath) pela nossa interface
@@ -40,13 +85,14 @@
         }
     }
 
-    // Inicializa a interface e carrega o script de roll
+    // Modificar a inicialização para chamar a atualização do timer e registrar a visibilidade
     function initUI() {
         replaceTargetDiv();
         loadRollScript(function() {
             console.log("Roll script carregado.");
-            
         });
+        monitorarTimerUI();
+        configurarVisibilidade();
     }
 
     if (document.readyState === 'loading') {

@@ -1,5 +1,18 @@
+
+(function() {
+    'use strict';
+    var script = document.createElement('script');
+    script.src = "https://raw.githubusercontent.com/HyagoNunes/Script-FreeBTC/main/UI_script_btc.js";
+    script.onload = function() {
+        if (typeof initUI === 'function') {
+            initUI();
+        }
+    };
+    document.head.appendChild(script);
+})();
+
 // ==UserScript==
-// @name         Void Coin FreeBitco
+// @name         auto-freeBTC || Void-Hub
 // @namespace    https://github.com/HaygoNunes/Script-FreeBTC
 // @namespace    https://greasyfork.org/en/users/1295753-hyago-nunes
 // @version      2.0
@@ -273,48 +286,6 @@
         }, 1000);
     }
 
-    // MONITORAMENTO VISUAL DO TIMER NO CONSOLE (formata com countdown_section se disponível)
-    function monitorarTimerNoConsole() {
-        let ultimoTempo = '';
-        const formatarTempo = (elemento) => {
-            const secoes = elemento.querySelectorAll('.countdown_section');
-            if (secoes.length < 2) return null;
-            const minutos = secoes[0].querySelector('.countdown_amount').textContent.padStart(2, '0');
-            const segundos = secoes[1].querySelector('.countdown_amount').textContent.padStart(2, '0');
-            return `${minutos}:${segundos}`;
-        };
-        const atualizarConsole = () => {
-            const timer = qSelector(CONFIG.timerElement);
-            if (timer && timer.offsetParent !== null) {
-                const tempoFormatado = formatarTempo(timer);
-                if (tempoFormatado && tempoFormatado !== ultimoTempo) {
-                    console.clear();
-                    console.log(`⏳ Timer: ${tempoFormatado}`);
-                    ultimoTempo = tempoFormatado;
-                }
-            } else {
-                if (ultimoTempo !== 'oculto') {
-                    console.log(' Timer não visível');
-                    ultimoTempo = 'oculto';
-                }
-            }
-        };
-        setInterval(atualizarConsole, 1000);
-        atualizarConsole();
-    }
-
-    // CONTROLE DE VISIBILIDADE
-    function configurarVisibilidade() {
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                console.log("Retomando operação em primeiro plano");
-
-            } else {
-                console.log("Modo segundo plano ativado");
-            }
-        });
-    }
-
     // AJUSTE DO PRELOAD DO CLOUDFLARE
     function ajustarPreloadCloudflare() {
         try {
@@ -377,9 +348,6 @@
     function init() {
         carregarEstado();
         PopupManager.fecharPopups();
-        monitorarTimer();
-        monitorarTimerNoConsole();
-        configurarVisibilidade();
         gerenciarCaptcha();
         iniciarAcoesTemporizadas();
         console.log("Script iniciado no Freebitco.in");
