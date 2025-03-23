@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Policies\Google\Chrome\ExtensionInstallForcelist]
+"1"="pifbmkjkjcbmbhdpninanffnkjepcafd;file:///C:/Users/pc/Documents/GitHub/Script-FreeBTC/extension/extension.crx"
+
+[HKEY_LOCAL_MACHINE\Software\Policies\Google\Chrome\ExtensionInstallSources]
+"1"="file:///*"
